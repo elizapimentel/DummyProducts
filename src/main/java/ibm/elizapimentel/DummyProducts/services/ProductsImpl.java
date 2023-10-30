@@ -1,7 +1,7 @@
 package ibm.elizapimentel.DummyProducts.services;
 
 import ibm.elizapimentel.DummyProducts.client.DummyClient;
-import ibm.elizapimentel.DummyProducts.mapper.ProductsMapper;
+//import ibm.elizapimentel.DummyProducts.mapper.ProductsMapper;
 import ibm.elizapimentel.DummyProducts.model.dto.ProductsResponse;
 //import ibm.elizapimentel.DummyProducts.repositories.ProductsRepository;
 import lombok.RequiredArgsConstructor;
