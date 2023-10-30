@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductsDTO implements Serializable {
+public class Products implements Serializable {
 
     @JsonProperty("products")
     private List<ProductsResponse> products;
