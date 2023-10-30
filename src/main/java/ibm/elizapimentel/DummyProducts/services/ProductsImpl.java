@@ -19,8 +19,8 @@ public class ProductsImpl implements ProductsService{
     private DummyClient client;
 //    @Autowired
 //    private ProductsRepository repo;
-    @Autowired
-    private ProductsMapper mapper;
+//    @Autowired
+//    private ProductsMapper mapper;
 
 
     @Override
