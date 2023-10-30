@@ -1,4 +1,4 @@
-package ibm.elizapimentel.DummyProducts.dto;
+package ibm.elizapimentel.DummyProducts.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
@@ -7,7 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
@@ -17,18 +19,17 @@ public class ProductsResponse implements Serializable {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
-    @NotNull
     private String title;
     private String description;
     private Integer price;
     private Double discountPercentage;
-    private  Double rating;
-    @NotNull
+    private Double rating;
     private Integer stock;
-    @NotNull
-    private  String brand;
-    @NotNull
-    private  String category;
+    private String brand;
+    private String category;
     private String thumbnail;
-    private String images;
+    private List<String> images;
+    private Integer total;
+    private Integer skip;
+    private Integer limit;
 }
