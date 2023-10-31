@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,13 +33,10 @@ class ProductsImplTest {
 
     @InjectMocks
     private ProductsImpl service;
-
     @Mock
     private ProductsRepository repo;
-
     @Mock
     private DummyClient client;
-
     @Mock
     private ProductsMapper mapper;
 
@@ -134,6 +133,28 @@ class ProductsImplTest {
         verify(repo, times(1)).searchCategory(productsResponse.getCategory());
         assertNotNull(res);
         assertThat(productsRequest).isEqualTo(mapper.dtoToModel(productsResponse));
+    }
+
+    @Test
+    void mustReturnNullCategory() {
+        List<ProductsRequest> returnNull = new ArrayList<>();
+        when(repo.findAll()).thenReturn(returnNull);
+
+        List<ProductsResponse> response = service.getByCategory(null);
+
+        assertThat(response.size()).isEqualTo(0);
+        verify(repo).findAll();
+
+    }
+
+    @Test
+    void mustReturnNullCategoryAndEmptyRepo() {
+        when(repo.findAll()).thenReturn(Collections.emptyList());
+
+        List<ProductsResponse> res = service.getByCategory(null);
+
+        assertEquals(Collections.emptyList(), res);
+        verify(repo).findAll();
     }
 
     private void buildProd() {
