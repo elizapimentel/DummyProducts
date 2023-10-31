@@ -1,4 +1,3 @@
-/*
 package ibm.elizapimentel.DummyProducts.mapper;
 
 import ibm.elizapimentel.DummyProducts.model.ProductsRequest;
@@ -13,4 +12,3 @@ public interface ProductsMapper {
     ProductsRequest dtoToModel(ProductsResponse dto);
 
 }
-*/
