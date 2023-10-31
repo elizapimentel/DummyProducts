@@ -1,5 +1,6 @@
 package ibm.elizapimentel.DummyProducts.controllers;
 
+import ibm.elizapimentel.DummyProducts.model.ProductsRequest;
 import ibm.elizapimentel.DummyProducts.model.dto.ProductsResponse;
 import ibm.elizapimentel.DummyProducts.services.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class ProductsController {
     private ProductsService service;
 
     @GetMapping()
-    public ResponseEntity<List<ProductsResponse>> getAll() {
-        List<ProductsResponse> products = service.getAllProducts();
+    public ResponseEntity<List<ProductsRequest>> getAll() {
+        List<ProductsRequest> products = service.getAllProducts();
         return ResponseEntity.status(200).body(products);
     }
 }
