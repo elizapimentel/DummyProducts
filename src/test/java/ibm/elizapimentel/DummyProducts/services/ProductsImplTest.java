@@ -19,6 +19,7 @@ import org.mockito.quality.Strictness;
 import java.util.List;
 import java.util.Optional;
 
+import static ibm.elizapimentel.DummyProducts.Common.Constants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -27,21 +28,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ProductsImplTest {
-
-    private Long ID                                   = 1L;
-    public static final String TITLE                  = "iPhone 9";
-    public static final String DESCRIPTION            = "An apple mobile which is nothing like apple";
-    public static final Integer PRICE                 = 549;
-    public static final Double DISCOUNT_PERCENTAGE    = 12.96;
-    public static final Double RATING                 = 4.69;
-    public static final Integer STOCK                 = 94;
-    public static final String BRAND                  = "Apple";
-    public static final String CATEGORY               = "smartphones";
-    public static final String THUMBNAIL              = "https://i.dummyjson.com/data/products/1/thumbnail.jpg";
-    public static final List<String> IMAGES           = List.of("https://i.dummyjson.com/data/products/1/1.jpg", "https://i.dummyjson.com/data/products/1/2.jpg", "https://i.dummyjson.com/data/products/1/3.jpg", "https://i.dummyjson.com/data/products/1/4.jpg", "https://i.dummyjson.com/data/products/1/thumbnail.jpg");
-    public static final Integer TOTAL                 = 100;
-    public static final Integer SKIP                  = 0;
-    public static final Integer LIMIT                 = 30;
 
     @InjectMocks
     private ProductsImpl service;
@@ -58,13 +44,12 @@ class ProductsImplTest {
     private ProductsRequest productsRequest;
     private ProductsResponse productsResponse;
     private Optional<ProductsRequest> optionalProductsReq;
-    private Optional<ProductsResponse> optionalProductsRes;
     private Products dto;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this); //chamas os mocks
-        buildProd(); //chama o metodo criado para gerar os dados
+        MockitoAnnotations.openMocks(this);
+        buildProd();
     }
 
     @Test
@@ -158,8 +143,6 @@ class ProductsImplTest {
                 STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES));
         productsResponse = new ProductsResponse(ID, TITLE, DESCRIPTION, PRICE, DISCOUNT_PERCENTAGE, RATING,
                 STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES, TOTAL, SKIP, LIMIT);
-        optionalProductsRes = Optional.of(new ProductsResponse(ID,TITLE, DESCRIPTION, PRICE, DISCOUNT_PERCENTAGE, RATING,
-                STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES, TOTAL, SKIP, LIMIT));
         dto = new Products(List.of(productsResponse));
         mapper = ProductsMapper.MAPPER;
 
