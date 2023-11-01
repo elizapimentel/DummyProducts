@@ -1,0 +1,47 @@
+version: "3.3"
+
+services:
+  mysqldb:
+    container_name: database
+    platform: linux/amd64
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=eliza123
+    ports:
+      - 3306:3306
+    networks:
+      - dummy-products-api-network
+    volumes:
+        - db:/var/lib/mysql
+
+  app:
+    container_name: api
+    platform: linux/amd64
+    build: './'
+    restart: always
+    networks:
+      - dummy-products-api-network
+    ports:
+      - 8090:8080
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url"  : "jdbc:mysql://localhost:3306/products?createDatabaseIfNotExist=true",
+        "spring.datasource.username" : "root",
+        "spring.datasource.password" : "eliza123",
+        "spring.jpa.hibernate.ddl-auto" : "update",
+        "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL8Dialect",
+        "spring.jpa.show-sql" : "true",
+        "spring.jpa.open-in-view" : "true"
+            }'
+    volumes:
+      - ./db/mysql:/data/db
+
+volumes:
+  db:
+
+networks:
+  dummy-products-api-network:
+    driver: bridge
+
