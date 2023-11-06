@@ -14,6 +14,4 @@ WORKDIR /app
 
 COPY --from=maven /app/app.jar ./app.jar
 
-EXPOSE 8090
-
 CMD ["java", "-jar", "/app/app.jar"]
