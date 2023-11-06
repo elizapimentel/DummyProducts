@@ -13,6 +13,6 @@ public interface ProductsService {
     List<ProductsResponse> getAllFromDB();
     ProductsResponse getProdById(Long id);
     List<ProductsResponse> getByCategory(String category);
-
     ProductsResponse postNewProduct( ProductsResponse prod);
+    ProductsResponse updateProduct (ProductsResponse prod);
 }

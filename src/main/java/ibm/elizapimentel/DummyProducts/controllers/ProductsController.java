@@ -3,6 +3,7 @@ package ibm.elizapimentel.DummyProducts.controllers;
 import ibm.elizapimentel.DummyProducts.model.ProductsRequest;
 import ibm.elizapimentel.DummyProducts.model.dto.ProductsResponse;
 import ibm.elizapimentel.DummyProducts.services.ProductsService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,19 @@ public class ProductsController {
             return ResponseEntity.status(201).body(service.postNewProduct(prod));
         } catch (Error e) {
             return ResponseEntity.status(422).build();
+        }
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(
+            @PathVariable Long id, @RequestBody ProductsResponse oldProd
+    ) {
+        try {
+            ProductsResponse actualProd = service.getProdById(id);
+            BeanUtils.copyProperties(oldProd, actualProd, "id");
+            return ResponseEntity.status(200).body(service.updateProduct(actualProd));
+        } catch (Error e) {
+            return ResponseEntity.status(400).build();
         }
     }
 }

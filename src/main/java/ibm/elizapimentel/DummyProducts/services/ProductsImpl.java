@@ -69,4 +69,12 @@ public class ProductsImpl implements ProductsService{
         ProductsRequest saveReq = repo.save(newProd);
         return mapper.MAPPER.modelToDto(saveReq);
     }
+
+    @Override
+    public ProductsResponse updateProduct(ProductsResponse prod) {
+        getProdById(prod.getId());
+        ProductsRequest update = mapper.dtoToModel(prod);
+        ProductsRequest saveUpdatedProd = repo.save(update);
+        return mapper.MAPPER.modelToDto(saveUpdatedProd);
+    }
 }
