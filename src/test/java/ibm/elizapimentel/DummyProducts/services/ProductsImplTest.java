@@ -157,6 +157,16 @@ class ProductsImplTest {
         verify(repo).findAll();
     }
 
+    @Test
+    void mustCreateNewProduct() {
+        when(repo.save(any())).thenReturn(productsRequest);
+
+        ProductsResponse response = service.postNewProduct(productsResponse);
+
+        assertNotNull(response);
+        assertThat(productsRequest).isEqualTo(mapper.dtoToModel(productsResponse));
+    }
+
     private void buildProd() {
         productsRequest = new ProductsRequest(ID, TITLE, DESCRIPTION, PRICE, DISCOUNT_PERCENTAGE, RATING,
                 STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES);
