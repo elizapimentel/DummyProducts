@@ -11,6 +11,8 @@ import java.util.List;
 public interface ProductsService {
     List<ProductsRequest> getAllProducts();
     List<ProductsResponse> getAllFromDB();
-    ProductsResponse getProdById (Long id);
-    List<ProductsResponse> getByCategory (String category);
+    ProductsResponse getProdById(Long id);
+    List<ProductsResponse> getByCategory(String category);
+
+    ProductsResponse postNewProduct( ProductsResponse prod);
 }

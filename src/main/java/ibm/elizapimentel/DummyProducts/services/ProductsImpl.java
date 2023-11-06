@@ -62,4 +62,11 @@ public class ProductsImpl implements ProductsService{
                 .collect(Collectors.toList());
         return res;
     }
+
+    @Override
+    public ProductsResponse postNewProduct(ProductsResponse prod) {
+        ProductsRequest newProd = mapper.dtoToModel(prod);
+        ProductsRequest saveReq = repo.save(newProd);
+        return mapper.MAPPER.modelToDto(saveReq);
+    }
 }

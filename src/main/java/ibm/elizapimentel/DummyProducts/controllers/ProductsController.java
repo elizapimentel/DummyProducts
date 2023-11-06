@@ -41,4 +41,13 @@ public class ProductsController {
         List<ProductsResponse> getCategory = service.getByCategory(category);
         return ResponseEntity.status(200).body(getCategory);
     }
+
+    @PostMapping("/newProd")
+    public ResponseEntity<?> postNewProduct(@RequestBody ProductsResponse prod) {
+        try {
+            return ResponseEntity.status(201).body(service.postNewProduct(prod));
+        } catch (Error e) {
+            return ResponseEntity.status(422).build();
+        }
+    }
 }
