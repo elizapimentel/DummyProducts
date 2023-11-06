@@ -77,4 +77,10 @@ public class ProductsImpl implements ProductsService{
         ProductsRequest saveUpdatedProd = repo.save(update);
         return mapper.MAPPER.modelToDto(saveUpdatedProd);
     }
+
+    @Override
+    public void deleteProduct(Long id) {
+        getProdById(id);
+        repo.deleteById(id);
+    }
 }

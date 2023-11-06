@@ -64,4 +64,10 @@ public class ProductsController {
             return ResponseEntity.status(400).build();
         }
     }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteProd(@PathVariable Long id) {
+        service.deleteProduct(id);
+        ResponseEntity.status(204);
+    }
 }
