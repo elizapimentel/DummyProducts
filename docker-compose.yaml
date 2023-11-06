@@ -1,4 +1,4 @@
-version: "3"
+version: "3.3"
 
 services:
   mysqldb:
@@ -35,10 +35,11 @@ services:
         "spring.datasource.username" : "$MYSQLDB_USER",
         "spring.datasource.password" : "$MYSQLDB_ROOT_PASSWORD",
         "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL8Dialect",
-        "spring.jpa.hibernate.ddl-auto" : "update"
+        "spring.jpa.hibernate.ddl-auto" : "update",
+        "spring.jpa.properties.hibernate.dialect.storage_engine" : "innodb"
       }'
     volumes:
-      - .m2:/root/.m2
+      - ./db/mysql:/data/db
     stdin_open: true
     tty: true
 
