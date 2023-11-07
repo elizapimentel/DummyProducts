@@ -1,4 +1,4 @@
-package ibm.elizapimentel.DummyProducts.Common;
+package ibm.elizapimentel.DummyProducts.common;
 
 import java.util.List;
 
