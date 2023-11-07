@@ -22,8 +22,7 @@ import static ibm.elizapimentel.DummyProducts.Common.Constants.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -93,7 +92,31 @@ public class ProductsControllerTest {
     }
 
     @Test
-    public void mustUpdateProductById() throws Exception {
+    public void mustReturnNewProductCreated() throws Exception {
+        ProductsResponse res = new ProductsResponse(ID, TITLE, DESCRIPTION, PRICE, DISCOUNT_PERCENTAGE, RATING,
+                STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES, TOTAL, SKIP, LIMIT);
+        when(service.postNewProduct(any(ProductsResponse.class)))
+                .thenReturn(res);
+        this.mockMvc.perform(post("/products/newProd")
+                        .content(asJsonString(res))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(201))
+                .andReturn();
+    }
+
+    @Test
+    public void mustReturnError422FromCatch() throws Exception {
+        ProductsResponse res = new ProductsResponse(ID, TITLE, DESCRIPTION, PRICE, DISCOUNT_PERCENTAGE, RATING,
+                STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES, TOTAL, SKIP, LIMIT);
+        doThrow(Error.class).when(service).postNewProduct(any());
+        this.mockMvc.perform(post("/products/newProd")
+                        .content(asJsonString(res))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void mustReturnProductUpdated() throws Exception {
         ProductsRequest request = new ProductsRequest(ID, TITLE, DESCRIPTION, PRICE, DISCOUNT_PERCENTAGE, RATING,
                 STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES);
         ProductsResponse response = ProductsMapper.MAPPER.modelToDto(request);
