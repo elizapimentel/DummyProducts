@@ -167,6 +167,51 @@ class ProductsImplTest {
         assertThat(productsRequest).isEqualTo(mapper.dtoToModel(productsResponse));
     }
 
+    @Test
+    void mustCreateNewProductNull() {
+        ProductsRequest req = productsRequest;
+        ProductsResponse res = mapper.modelToDto(req);
+
+        when(repo.save(req)).thenReturn(req);
+
+        try {
+            service.postNewProduct(res);
+        }catch (Exception e) {
+            assertEquals(NullPointerException.class, e.getClass());
+        }
+    }
+
+    @Test
+    void mustReturnProductUpdated() {
+        when(repo.findById(anyLong())).thenReturn(optionalProductsReq);
+        when(repo.save(any())).thenReturn(productsRequest);
+
+        ProductsResponse res = service.updateProduct(productsResponse);
+
+        assertNotNull(res);
+        assertThat(productsRequest).isEqualTo(mapper.dtoToModel(productsResponse));
+        assertEquals(ProductsResponse.class, res.getClass());
+        assertEquals(ID, res.getId());
+        assertEquals(TITLE, res.getTitle());
+        assertEquals(DESCRIPTION, res.getDescription());
+        assertEquals(PRICE,res.getPrice());
+        assertEquals(DISCOUNT_PERCENTAGE, res.getDiscountPercentage());
+        assertEquals(RATING, res.getRating());
+        assertEquals(STOCK, res.getStock());
+        assertEquals(BRAND, res.getBrand());
+        assertEquals(CATEGORY, res.getCategory());
+        assertEquals(THUMBNAIL, res.getThumbnail());
+        assertEquals(IMAGES, res.getImages());
+    }
+
+    @Test
+    void mustDeleteProductById() {
+        when(repo.findById(anyLong())).thenReturn(optionalProductsReq);
+        doNothing().when(repo).deleteById(anyLong());
+        service.deleteProduct(ID);
+        verify(repo, times(1)).deleteById(anyLong());
+    }
+
     private void buildProd() {
         productsRequest = new ProductsRequest(ID, TITLE, DESCRIPTION, PRICE, DISCOUNT_PERCENTAGE, RATING,
                 STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES);
