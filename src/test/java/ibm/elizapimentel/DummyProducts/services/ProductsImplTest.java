@@ -71,6 +71,12 @@ class ProductsImplTest {
     }
 
     @Test
+    void mustMapResponseToRequestWithNullResponse() {
+        ProductsRequest result = mapper.dtoToModel(null);
+        assertNull(result);
+    }
+
+    @Test
     void mustReturnAllDataFromClient() {
         when(client.getAllProducts()).
                 thenReturn(dto);
