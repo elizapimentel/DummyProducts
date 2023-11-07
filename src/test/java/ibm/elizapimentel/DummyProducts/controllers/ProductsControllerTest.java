@@ -18,13 +18,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static ibm.elizapimentel.DummyProducts.Common.Constants.CATEGORY;
-import static ibm.elizapimentel.DummyProducts.Common.Constants.ID;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static ibm.elizapimentel.DummyProducts.Common.Constants.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
@@ -89,6 +90,45 @@ public class ProductsControllerTest {
                         .content(asJsonString(response))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void mustUpdateProductById() throws Exception {
+        ProductsRequest request = new ProductsRequest(ID, TITLE, DESCRIPTION, PRICE, DISCOUNT_PERCENTAGE, RATING,
+                STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES);
+        ProductsResponse response = ProductsMapper.MAPPER.modelToDto(request);
+
+        when(service.getProdById(anyLong()))
+                .thenReturn(response);
+        when(service.updateProduct(any(ProductsResponse.class)))
+                .thenReturn(response);
+
+        this.mockMvc.perform(put("/products/update/" + ID)
+                        .content(asJsonString(response))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value(response.getTitle()))
+                .andExpect(jsonPath("$.description").value(response.getDescription()))
+                .andExpect(jsonPath("$.price").value(response.getPrice()))
+                .andExpect(jsonPath("$.discountPercentage").value(response.getDiscountPercentage()))
+                .andExpect(jsonPath("$.rating").value(response.getRating()))
+                .andExpect(jsonPath("$.stock").value(response.getStock()))
+                .andExpect(jsonPath("$.brand").value(response.getBrand()))
+                .andExpect(jsonPath("$.category").value(response.getCategory()))
+                .andExpect(jsonPath("$.thumbnail").value(response.getThumbnail()))
+                .andExpect(jsonPath("$.images").value(response.getImages()));
+    }
+
+    @Test
+    public void mustReturnError400FromCatch() throws Exception {
+        ProductsResponse dto = new ProductsResponse(ID, TITLE, DESCRIPTION, PRICE, DISCOUNT_PERCENTAGE, RATING,
+                STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES, TOTAL, SKIP, LIMIT);
+        when(service.getProdById(anyLong())).thenThrow(Error.class);
+        doThrow(Error.class).when(service).updateProduct(any());
+        this.mockMvc.perform(put("/products/update/" + ID)
+                        .content(asJsonString(dto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     private static String asJsonString(final Object obj) {
