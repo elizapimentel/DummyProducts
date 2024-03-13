@@ -6,10 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductsRepository extends JpaRepository<ProductsRequest, Long> {
     @Query("SELECT p FROM ProductsRequest p WHERE p.category LIKE %?1%")
     List<ProductsRequest> searchCategory(String valor);
+
+    Optional<ProductsRequest> findByTitle(String title);
 
 }
