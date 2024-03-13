@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,10 +28,20 @@ public class ProductsImpl implements ProductsService{
     @Override
     public List<ProductsRequest> getAllProducts() {
         List<ProductsResponse> response = client.getAllProducts().getProducts();
-        List<ProductsRequest> requestList = response.stream()
-                .map(ProductsMapper.MAPPER::dtoToModel)
-                .collect(Collectors.toList());
-        return repo.saveAll(requestList);
+        for (ProductsResponse externalProduct : response) {
+            Optional<ProductsRequest> existingProduct = repo.findByTitle(externalProduct.getTitle());
+            if (existingProduct.isPresent()) {
+                // Se o produto já existir no banco de dados, atualize as informações
+                ProductsRequest updatedProduct = existingProduct.get();
+                mapper.updateModelFromDto(externalProduct, updatedProduct);
+                repo.save(updatedProduct);
+            } else {
+                // Se o produto não existir, crie um novo registro
+                ProductsRequest newProduct = mapper.dtoToModel(externalProduct);
+                repo.save(newProduct);
+            }
+        }
+        return repo.findAll();
     }
 
     @Override
@@ -65,9 +76,22 @@ public class ProductsImpl implements ProductsService{
 
     @Override
     public ProductsResponse postNewProduct(ProductsResponse prod) {
-        ProductsRequest newProd = mapper.dtoToModel(prod);
-        ProductsRequest saveReq = repo.save(newProd);
-        return mapper.MAPPER.modelToDto(saveReq);
+        // Verifica se já existe um produto com o mesmo título no banco de dados
+        Optional<ProductsRequest> existingProduct = repo.findByTitle(prod.getTitle().toLowerCase());
+
+        if (existingProduct.isPresent()) {
+            // Se o produto com o mesmo título já existe, adiciona mais um item ao estoque
+            ProductsRequest existingProd = existingProduct.get();
+            existingProd.setStock(existingProd.getStock() + 1); // Incrementa o estoque em 1
+            ProductsRequest updatedProd = repo.save(existingProd);
+            return mapper.modelToDto(updatedProd);
+        } else {
+            // Se o produto não existe, cria um novo e salva no banco de dados
+            ProductsRequest newProd = mapper.dtoToModel(prod);
+            newProd.setStock(1);
+            ProductsRequest saveReq = repo.save(newProd);
+            return mapper.modelToDto(saveReq);
+        }
     }
 
     @Override
@@ -83,4 +107,6 @@ public class ProductsImpl implements ProductsService{
         getProdById(id);
         repo.deleteById(id);
     }
+
 }
+
