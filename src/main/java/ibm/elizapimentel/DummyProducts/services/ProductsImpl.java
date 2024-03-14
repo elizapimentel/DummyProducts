@@ -47,6 +47,18 @@ public class ProductsImpl implements ProductsService{
     @Override
     public List<ProductsResponse> getAllFromDB() {
         List<ProductsRequest> req = repo.findAll();
+        for (ProductsRequest internalProduct : req) {
+            Optional<ProductsRequest> existingProduct = repo.findByTitle(internalProduct
+                    .getTitle()
+                    .toLowerCase());
+            if (existingProduct.isPresent()) {
+                // Se o produto já existir no banco de dados, atualize as informações
+                ProductsRequest updatedProduct = existingProduct.get();
+                internalProduct.setStock(updatedProduct.getStock());
+                // Salva o produto atualizado no banco de dados
+                repo.save(internalProduct);
+            }
+        }
         return req.stream()
                 .map(prod -> mapper.MAPPER.modelToDto(prod))
                 .collect(Collectors.toList());
@@ -92,6 +104,7 @@ public class ProductsImpl implements ProductsService{
             ProductsRequest saveReq = repo.save(newProd);
             return mapper.modelToDto(saveReq);
         }
+
     }
 
     @Override
@@ -104,8 +117,24 @@ public class ProductsImpl implements ProductsService{
 
     @Override
     public void deleteProduct(Long id) {
-        getProdById(id);
-        repo.deleteById(id);
+        // Verificar se o produto existe
+        ProductsRequest product = repo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Product not found with id: " + id));
+
+        // Obter a quantidade em estoque do produto
+        int stock = product.getStock();
+
+        // Verificar se há pelo menos 1 item em estoque
+        if (stock > 0) {
+            // Diminuir o estoque do produto em 1 unidade
+            product.setStock(stock - 1);
+            repo.save(product);
+
+            repo.updateTotalStock(id, stock - 1);
+        } else {
+            // Se não houver estoque disponível, lançar uma exceção ou tratar conforme necessário
+            throw new RuntimeException("Product out of stock");
+        }
     }
 
 }
