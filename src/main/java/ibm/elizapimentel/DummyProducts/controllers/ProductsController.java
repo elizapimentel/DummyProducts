@@ -5,6 +5,7 @@ import ibm.elizapimentel.DummyProducts.model.dto.ProductsResponse;
 import ibm.elizapimentel.DummyProducts.services.ProductsService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductsController {
 
+    @Qualifier("productsImpl")
     @Autowired
     private ProductsService service;
 
