@@ -10,7 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/products")
 public class ProductsController {
