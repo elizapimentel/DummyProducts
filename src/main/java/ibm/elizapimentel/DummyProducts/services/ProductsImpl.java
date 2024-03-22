@@ -88,19 +88,27 @@ public class ProductsImpl implements ProductsService{
 
     @Override
     public ProductsResponse postNewProduct(ProductsResponse prod) {
+        //verifica se os campos estão preenchidos
+        if ((prod.getTitle() == null || prod.getTitle().trim().isEmpty()) ||
+                (prod.getDescription() == null || prod.getDescription().trim().isEmpty()) ||
+                (prod.getPrice() == null) ||
+                (prod.getDiscountPercentage() == null) ||
+                (prod.getRating() == null) ||
+                (prod.getBrand() == null || prod.getBrand().trim().isEmpty()) ||
+                (prod.getCategory() == null || prod.getCategory().trim().isEmpty()) ||
+                (prod.getThumbnail() == null || prod.getThumbnail().trim().isEmpty())) {
+            throw new IllegalArgumentException("Existe algum campo não preenchido.");
+        }
+
         // Verifica se já existe um produto com o mesmo título no banco de dados
         Optional<ProductsRequest> existingProduct = repo.findByTitle(prod.getTitle().toLowerCase());
 
         if (existingProduct.isPresent()) {
-            // Se o produto com o mesmo título já existe, adiciona mais um item ao estoque
-            ProductsRequest existingProd = existingProduct.get();
-            existingProd.setStock(existingProd.getStock() + 1); // Incrementa o estoque em 1
-            ProductsRequest updatedProd = repo.save(existingProd);
-            return mapper.modelToDto(updatedProd);
+            throw new RuntimeException("Já existe um produto com o mesmo título.");
         } else {
             // Se o produto não existe, cria um novo e salva no banco de dados
             ProductsRequest newProd = mapper.dtoToModel(prod);
-            newProd.setStock(1);
+            newProd.setStock(prod.getStock());
             ProductsRequest saveReq = repo.save(newProd);
             return mapper.modelToDto(saveReq);
         }
