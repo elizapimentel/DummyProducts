@@ -16,6 +16,7 @@ public interface ProductsRepository extends JpaRepository<ProductsRequest, Long>
     @Query("SELECT p FROM ProductsRequest p WHERE p.category LIKE %?1%")
     List<ProductsRequest> searchCategory(String valor);
 
+    @Query("SELECT p FROM ProductsRequest p WHERE p.title = :title")
     Optional<ProductsRequest> findByTitle(String title);
 
     @Modifying
