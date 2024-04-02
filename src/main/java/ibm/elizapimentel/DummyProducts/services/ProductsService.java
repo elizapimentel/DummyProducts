@@ -14,6 +14,6 @@ public interface ProductsService {
     ProductsResponse getProdById(Long id);
     List<ProductsResponse> getByCategory(String category);
     ProductsResponse postNewProduct( ProductsResponse prod);
-    ProductsResponse updateProduct(ProductsResponse prod);
+    ProductsResponse updateProduct(Long id, ProductsResponse prod);
     void deleteProduct(Long id);
 }

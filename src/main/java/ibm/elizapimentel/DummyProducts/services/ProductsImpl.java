@@ -47,18 +47,6 @@ public class ProductsImpl implements ProductsService{
     @Override
     public List<ProductsResponse> getAllFromDB() {
         List<ProductsRequest> req = repo.findAll();
-        for (ProductsRequest internalProduct : req) {
-            Optional<ProductsRequest> existingProduct = repo.findByTitle(internalProduct
-                    .getTitle()
-                    .toLowerCase());
-            if (existingProduct.isPresent()) {
-                // Se o produto já existir no banco de dados, atualize as informações
-                ProductsRequest updatedProduct = existingProduct.get();
-                internalProduct.setStock(updatedProduct.getStock());
-                // Salva o produto atualizado no banco de dados
-                repo.save(internalProduct);
-            }
-        }
         return req.stream()
                 .map(prod -> mapper.MAPPER.modelToDto(prod))
                 .collect(Collectors.toList());
@@ -116,11 +104,28 @@ public class ProductsImpl implements ProductsService{
     }
 
     @Override
-    public ProductsResponse updateProduct(ProductsResponse prod) {
-        getProdById(prod.getId());
-        ProductsRequest update = mapper.dtoToModel(prod);
-        ProductsRequest saveUpdatedProd = repo.save(update);
-        return mapper.MAPPER.modelToDto(saveUpdatedProd);
+    public ProductsResponse updateProduct(Long id, ProductsResponse updatedProduct) {
+        // Verifica se o produto com o ID fornecido existe no banco de dados
+        ProductsRequest existingProduct = repo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Product not found with id: " + id));
+
+        // Atualiza os dados do produto existente com os dados fornecidos
+        existingProduct.setTitle(updatedProduct.getTitle());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setDiscountPercentage(updatedProduct.getDiscountPercentage());
+        existingProduct.setRating(updatedProduct.getRating());
+        existingProduct.setStock(updatedProduct.getStock());
+        existingProduct.setBrand(updatedProduct.getBrand());
+        existingProduct.setCategory(updatedProduct.getCategory());
+        existingProduct.setThumbnail(updatedProduct.getThumbnail());
+        existingProduct.setImages(updatedProduct.getImages());
+
+        // Salva o produto atualizado
+        ProductsRequest updatedProductEntity = repo.save(existingProduct);
+
+        // Converte e retorna o produto atualizado como ProductsResponse
+        return mapper.MAPPER.modelToDto(updatedProductEntity);
     }
 
     @Override

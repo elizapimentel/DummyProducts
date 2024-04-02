@@ -3,15 +3,12 @@ package ibm.elizapimentel.DummyProducts.controllers;
 import ibm.elizapimentel.DummyProducts.model.ProductsRequest;
 import ibm.elizapimentel.DummyProducts.model.dto.ProductsResponse;
 import ibm.elizapimentel.DummyProducts.services.ProductsService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -21,6 +18,7 @@ public class ProductsController {
     @Qualifier("productsImpl")
     @Autowired
     private ProductsService service;
+
 
     @GetMapping()
     public ResponseEntity<List<ProductsRequest>> getAll() {
@@ -59,13 +57,15 @@ public class ProductsController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(
-            @PathVariable Long id, @RequestBody ProductsResponse oldProd
+            @PathVariable Long id, @RequestBody ProductsResponse updatedProduct
     ) {
         try {
-            ProductsResponse actualProd = service.getProdById(id);
-            BeanUtils.copyProperties(oldProd, actualProd, "id");
-            return ResponseEntity.status(200).body(service.updateProduct(actualProd));
-        } catch (Error e) {
+            // Atualiza o produto no serviço usando o objeto atualizado
+            ProductsResponse updated = service.updateProduct(id, updatedProduct);
+
+            // Retorna o produto atualizado como resposta
+            return ResponseEntity.status(200).body(updated);
+        } catch (Exception e) {
             return ResponseEntity.status(400).build();
         }
     }
