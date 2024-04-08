@@ -129,26 +129,32 @@ public class ProductsImpl implements ProductsService{
     }
 
     @Override
-    public void deleteProduct(Long id) {
-        // Verificar se o produto existe
+    public void deleteProduct(Long id, boolean deleteWholeItem, int quantityToRemove) {
+        // Verifica se o produto existe
         ProductsRequest product = repo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Product not found with id: " + id));
+                .orElseThrow(() -> new NoSuchElementException("Produto não encontrado de id: " + id));
 
         // Obter a quantidade em estoque do produto
         int stock = product.getStock();
 
-        // Verificar se há pelo menos 1 item em estoque
-        if (stock > 0) {
-            // Diminuir o estoque do produto em 1 unidade
-            product.setStock(stock - 1);
-            repo.save(product);
-
-            repo.updateTotalStock(id, stock - 1);
+        if (deleteWholeItem) {
+            // Excluir o produto inteiro
+            repo.deleteById(id);
         } else {
-            // Se não houver estoque disponível, lançar uma exceção ou tratar conforme necessário
-            throw new RuntimeException("Product out of stock");
+            // Verificar se há pelo menos a quantidade especificada em estoque
+            if (stock >= quantityToRemove) {
+                // Diminuir o estoque do produto pela quantidade especificada
+                product.setStock(stock - quantityToRemove);
+                repo.save(product);
+
+                repo.updateTotalStock(id, stock - quantityToRemove);
+            } else {
+                // Se não houver estoque disponível suficiente, lançar uma exceção ou tratar conforme necessário
+                throw new RuntimeException("Valor em estoque insuficiente");
+            }
         }
     }
+
 
 }
 

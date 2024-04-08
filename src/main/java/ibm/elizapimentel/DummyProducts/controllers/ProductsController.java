@@ -71,8 +71,18 @@ public class ProductsController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteProd(@PathVariable Long id) {
-        service.deleteProduct(id);
-        ResponseEntity.status(204);
+    public ResponseEntity<?> deleteProd(@PathVariable Long id,
+                                        @RequestParam(required = false) Boolean deleteWholeItem,
+                                        @RequestParam(required = false, defaultValue = "1") Integer quantityToRemove) {
+        if (deleteWholeItem != null && deleteWholeItem) {
+            // Excluir o item inteiro
+            service.deleteProduct(id, true, 0);
+        } else {
+            // Diminuir apenas o estoque
+            service.deleteProduct(id, false, quantityToRemove); // Passando a quantidade para remover
+        }
+        return ResponseEntity.status(204).build();
     }
+
+
 }
