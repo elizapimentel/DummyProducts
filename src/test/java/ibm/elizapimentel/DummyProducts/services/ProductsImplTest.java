@@ -192,7 +192,7 @@ class ProductsImplTest {
         when(repo.findById(anyLong())).thenReturn(optionalProductsReq);
         when(repo.save(any())).thenReturn(productsRequest);
 
-        ProductsResponse res = service.updateProduct(productsResponse);
+        ProductsResponse res = service.updateProduct(any(), productsResponse);
 
         assertNotNull(res);
         assertThat(productsRequest).isEqualTo(mapper.dtoToModel(productsResponse));
@@ -214,7 +214,7 @@ class ProductsImplTest {
     void mustDeleteProductById() {
         when(repo.findById(anyLong())).thenReturn(optionalProductsReq);
         doNothing().when(repo).deleteById(anyLong());
-        service.deleteProduct(ID);
+        service.deleteProduct(ID, true, 0);
         verify(repo, times(1)).deleteById(anyLong());
     }
 

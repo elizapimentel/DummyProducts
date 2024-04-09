@@ -122,7 +122,7 @@ public class ProductsControllerTest {
 
         when(service.getProdById(anyLong()))
                 .thenReturn(response);
-        when(service.updateProduct(any(ProductsResponse.class)))
+        when(service.updateProduct(anyLong(), any(ProductsResponse.class)))
                 .thenReturn(response);
 
         this.mockMvc.perform(put("/products/update/" + ID)
@@ -146,7 +146,7 @@ public class ProductsControllerTest {
         ProductsResponse dto = new ProductsResponse(ID, TITLE, DESCRIPTION, PRICE, DISCOUNT_PERCENTAGE, RATING,
                 STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES, TOTAL, SKIP, LIMIT);
         when(service.getProdById(anyLong())).thenThrow(Error.class);
-        doThrow(Error.class).when(service).updateProduct(any());
+        doThrow(Error.class).when(service).updateProduct(any(), any());
         this.mockMvc.perform(put("/products/update/" + ID)
                         .content(asJsonString(dto))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -159,11 +159,11 @@ public class ProductsControllerTest {
                 STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES, TOTAL, SKIP, LIMIT);
 
         when(service.getProdById(anyLong())).thenReturn(response);
-        doNothing().when(service).deleteProduct(response.getId());
+        doNothing().when(service).deleteProduct(response.getId(), true, 2);
 
         this.mockMvc.perform(delete("/products/delete/" + 1L))
                 .andExpect(status().is2xxSuccessful());
-        verify(service, times(1)).deleteProduct(1L);
+        verify(service, times(1)).deleteProduct(1L, true, 2);
     }
 
     private static String asJsonString(final Object obj) {
