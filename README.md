@@ -116,10 +116,10 @@ O projeto foi estruturado seguindo modelo da estrura de Arquitetura de Software 
 
 <div align = "center">
 
-|  Método  |                                           Rota                                            |                Descrição                |
-| :------: |:-----------------------------------------------------------------------------------------:|:---------------------------------------:|
-| `DELETE` | http://localhost:8080/api/products/ID?deleteWholeItem=false&quantityToRemove=<quantidade> | Diminui valor do estoque do item por ID |
-| `DELETE` |             http://localhost:8080/api/products/delete/ID?deleteWholeItem=true             |         Deleta todo item por ID         |
+|  Método  |                                          Rota                                           |                Descrição                |
+| :------: |:---------------------------------------------------------------------------------------:|:---------------------------------------:|
+| `DELETE` | http://localhost:8080/api/products/ID?deleteWholeItem=false&quantityToRemove=quantidade | Diminui valor do estoque do item por ID |
+| `DELETE` |            http://localhost:8080/api/products/delete/ID?deleteWholeItem=true            |         Deleta todo item por ID         |
 
 <br>
 </div>
