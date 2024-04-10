@@ -8,6 +8,7 @@ import ibm.elizapimentel.DummyProducts.repositories.ProductsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,7 +30,7 @@ public class ProductsImpl implements ProductsService{
     public List<ProductsRequest> getAllProducts() {
         List<ProductsResponse> response = client.getAllProducts().getProducts();
         for (ProductsResponse externalProduct : response) {
-            Optional<ProductsRequest> existingProduct = repo.findByTitle(externalProduct.getTitle());
+            Optional<ProductsRequest> existingProduct = repo.findByTitle(externalProduct.getTitle().toLowerCase());
             if (existingProduct.isPresent()) {
                 // Se o produto já existir no banco de dados, atualize as informações
                 ProductsRequest updatedProduct = existingProduct.get();
@@ -103,6 +104,7 @@ public class ProductsImpl implements ProductsService{
 
     }
 
+    @Transactional
     @Override
     public ProductsResponse updateProduct(Long id, ProductsResponse updatedProduct) {
         // Verifica se o produto com o ID fornecido existe no banco de dados
@@ -128,6 +130,7 @@ public class ProductsImpl implements ProductsService{
         return mapper.MAPPER.modelToDto(updatedProductEntity);
     }
 
+    @Transactional
     @Override
     public void deleteProduct(Long id, boolean deleteWholeItem, int quantityToRemove) {
         // Verifica se o produto existe
