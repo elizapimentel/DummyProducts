@@ -7,7 +7,7 @@ public class Constants {
     public static final Long ID                       = 1L;
     public static final String TITLE                  = "iPhone 9";
     public static final String DESCRIPTION            = "An apple mobile which is nothing like apple";
-    public static final Integer PRICE                 = 549;
+    public static final Double PRICE                 = 549.00;
     public static final Double DISCOUNT_PERCENTAGE    = 12.96;
     public static final Double RATING                 = 4.69;
     public static final Integer STOCK                 = 94;

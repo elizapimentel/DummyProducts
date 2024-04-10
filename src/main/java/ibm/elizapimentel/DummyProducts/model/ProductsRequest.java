@@ -1,7 +1,6 @@
 package ibm.elizapimentel.DummyProducts.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +25,7 @@ public class ProductsRequest implements Serializable {
     private Long id;
     private String title;
     private String description;
-    private Integer price;
+    private Double price;
     private Double discountPercentage;
     private Double rating;
     private Integer stock;

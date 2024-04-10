@@ -19,7 +19,7 @@ public class ProductsResponse implements Serializable {
     private Long id;
     private String title;
     private String description;
-    private Integer price;
+    private Double price;
     private Double discountPercentage;
     private Double rating;
     private Integer stock;

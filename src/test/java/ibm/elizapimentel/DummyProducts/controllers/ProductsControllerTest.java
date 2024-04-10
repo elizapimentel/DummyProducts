@@ -51,7 +51,7 @@ public class ProductsControllerTest {
         ProductsRequest prod = new ProductsRequest();
         prod.setTitle("iPhone 9");
         prod.setDescription("An apple mobile which is nothing like apple");
-        prod.setPrice(549);
+        prod.setPrice(540.00);
         prod.setDiscountPercentage(12.96);
         prod.setRating(4.69);
         prod.setStock(94);
