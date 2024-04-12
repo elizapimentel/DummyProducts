@@ -57,7 +57,7 @@ public class ProductsImpl implements ProductsService{
     public ProductsResponse getProdById(Long id) {
         Optional<ProductsRequest> prod = repo.findById(id);
         return mapper.MAPPER.modelToDto(prod.orElseThrow(
-                () -> new Error("Id not found"))
+                () -> new Error("Id não encontrado"))
         );
     }
 
@@ -132,32 +132,10 @@ public class ProductsImpl implements ProductsService{
 
     @Transactional
     @Override
-    public void deleteProduct(Long id, boolean deleteWholeItem, int quantityToRemove) {
-        // Verifica se o produto existe
-        ProductsRequest product = repo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Produto não encontrado de id: " + id));
-
-        // Obter a quantidade em estoque do produto
-        int stock = product.getStock();
-
-        if (deleteWholeItem) {
-            // Excluir o produto inteiro
-            repo.deleteById(id);
-        } else {
-            // Verificar se há pelo menos a quantidade especificada em estoque
-            if (stock >= quantityToRemove) {
-                // Diminuir o estoque do produto pela quantidade especificada
-                product.setStock(stock - quantityToRemove);
-                repo.save(product);
-
-                repo.updateTotalStock(id, stock - quantityToRemove);
-            } else {
-                // Se não houver estoque disponível suficiente, lançar uma exceção ou tratar conforme necessário
-                throw new RuntimeException("Valor em estoque insuficiente");
-            }
-        }
+    public void deleteProduct(Long id) {
+        getProdById(id);
+        repo.deleteById(id);
     }
-
 
 }
 

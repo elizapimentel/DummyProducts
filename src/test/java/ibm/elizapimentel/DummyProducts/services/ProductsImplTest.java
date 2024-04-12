@@ -214,7 +214,7 @@ class ProductsImplTest {
     void mustDeleteProductById() {
         when(repo.findById(anyLong())).thenReturn(optionalProductsReq);
         doNothing().when(repo).deleteById(anyLong());
-        service.deleteProduct(ID, true, 0);
+        service.deleteProduct(ID);
         verify(repo, times(1)).deleteById(anyLong());
     }
 

@@ -159,11 +159,11 @@ public class ProductsControllerTest {
                 STOCK, BRAND, CATEGORY, THUMBNAIL, IMAGES, TOTAL, SKIP, LIMIT);
 
         when(service.getProdById(anyLong())).thenReturn(response);
-        doNothing().when(service).deleteProduct(response.getId(), true, 2);
+        doNothing().when(service).deleteProduct(response.getId());
 
         this.mockMvc.perform(delete("/products/delete/" + 1L))
                 .andExpect(status().is2xxSuccessful());
-        verify(service, times(1)).deleteProduct(1L, true, 2);
+        verify(service, times(1)).deleteProduct(1L);
     }
 
     private static String asJsonString(final Object obj) {
